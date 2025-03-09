@@ -14,7 +14,7 @@ all: ${BUILD_DIR} ${BUILD_DIR}/main
 ${BUILD_DIR}:
 	mkdir -p $@
 
-${BUILD_DIR}/main: ${SRC_DIR}/main.cpp ${OBJS}
+${BUILD_DIR}/server_main: ${SRC_DIR}/server_main.cpp ${OBJS}
 	${CXX} ${CXX_FLAGS} $^ -o $@
 
 
