@@ -11,7 +11,11 @@ Client::Client(const char* ip, int port)
 	addr_len = sizeof(addr);
 };
 
-
+Client::~Client()
+{
+	delete buffer;
+	close(fd);
+};
 
 void Client::create_socket()
 {
@@ -36,3 +40,17 @@ void Client::fill_address(const char* ip, int port)
 
 };
 
+void Client::connect_to_server()
+{
+	status = connect(fd, (sockaddr*)&addr, addr_len);
+	
+	if(status == -1)
+	{
+		perror("Failure connecting to server");
+		close(fd);
+		exit(EXIT_FAILURE);
+	}else{
+		printf("Success connecting to server\n");
+	};
+
+};
