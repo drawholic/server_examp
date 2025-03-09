@@ -10,6 +10,7 @@
 
 // const char* message = "Hello server!";
 const unsigned BUFFER_SIZE = 1024;
+const unsigned DEFAULT_PORT = 8000;
 
 class Client
 {
