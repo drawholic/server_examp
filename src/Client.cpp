@@ -9,6 +9,8 @@ Client::Client(const char* ip, int port)
 
 	buffer = new char[BUFFER_SIZE];
 	addr_len = sizeof(addr);
+
+	connect_to_server();
 };
 
 Client::~Client()
@@ -33,7 +35,7 @@ void Client::fill_address(const char* ip, int port)
 	if(ip)
 		inet_aton(ip, &addr.sin_addr);
 	else
-		addr.sin_addr.s_addr = INADDRY_ANY;
+		addr.sin_addr.s_addr = INADDR_ANY;
 
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
@@ -48,9 +50,14 @@ void Client::connect_to_server()
 	{
 		perror("Failure connecting to server");
 		close(fd);
-		exit(EXIT_FAILURE);
 	}else{
 		printf("Success connecting to server\n");
 	};
 
+};
+
+void Client::get_message()
+{
+	const char* msg = "Hello world!";
+	message = msg;
 };
