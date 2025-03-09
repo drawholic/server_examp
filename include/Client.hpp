@@ -10,6 +10,7 @@ const unsigned BUFFER_SIZE = 1024;
 
 class Client
 {
+	int status;
 	int fd;
 	sockaddr_in addr;
 	socklen_t addr_len;
