@@ -1,7 +1,12 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <cstdio>
+#include <cstdlib>
+#include <unistd.h>
 
 class Server
 {
