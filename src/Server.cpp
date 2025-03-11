@@ -23,8 +23,7 @@ Server::Server(const char* ip, int port)
 void Server::init_fds()
 {
 	fds_num = 1;
-	fds = new pollfd[FDS_CAPACITY];
-	fds = {0};
+	fds = new pollfd[FDS_CAPACITY]();
 
 	pollfd serv;
 	serv.fd = fd;
@@ -60,10 +59,7 @@ Server::~Server()
 	delete[] buffer;
 	for(unsigned i = 0; i < fds_num; i++)
 	{
-		if((fds+i) != 0)
-		{
-			close(fds[i].fd);
-		};
+		close(fds[i].fd);
 	};
 	delete[] fds;
 	close(fd);
@@ -110,6 +106,8 @@ void Server::bind_addr()
 void Server::run()
 {
 	running = true;
+	printf("Accepting connections...\n");
+
 	while(running)
 	{
 		status = poll(fds, fds_num, 1000);
@@ -117,11 +115,36 @@ void Server::run()
 		if(status == -1)
 		{
 			perror("Error on polling");
+			continue;
 		};
 
+		if(fds[1].revents & POLLIN)
+		{
+			client = accept(fd, 0, 0);
+			if(client == -1)
+			{
+				perror("Failure accepting");
+				continue;
+			};
+			pollfd client_pollfd;
+			client_pollfd.fd = client;
+			client_pollfd.events = POLLIN;
+
+		};
 	};
 };
 
+void Server::add_pollfd(pollfd* client)
+{
+	 if (fds_num >= FDS_CAPACITY) {
+        close(client);
+        return;
+    }
+
+    fds[fds_num].fd = client;
+    fds[fds_num].events = POLLIN;
+    fds_num++;
+};
 
 void Server::socket_listen()
 {
