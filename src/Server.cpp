@@ -17,6 +17,7 @@ Server::Server(const char* ip, int port)
 	buffer = new char[BUFFER_SIZE];
 	fds_num = 0;
 	fds = new pollfd[FDS_CAPACITY];
+	fds = {0};
 };
 
 void Server::set_options()
