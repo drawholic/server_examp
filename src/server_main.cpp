@@ -6,10 +6,12 @@
 Server* s;
 
 void handle_interrupt(int);
-
+void handle_terminate(int);
 int main(int argc, char const *argv[])
 {
 	signal(SIGINT, handle_interrupt);
+	signal(SIGTERM, handle_interrupt);
+
 	const char* ip = "0.0.0.0";
 	int port = 8000;
 
@@ -28,3 +30,8 @@ void handle_interrupt(int sig)
 	s->stop();
 };
 
+void handle_terminate(int sig)
+{
+	printf("Terminating...\n");
+	s->stop();
+};
