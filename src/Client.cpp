@@ -15,7 +15,7 @@ Client::Client(const char* ip, int port)
 
 Client::~Client()
 {
-	delete buffer[];
+	delete[] buffer;
 	close(fd);
 };
 
@@ -39,7 +39,7 @@ void Client::fill_address(const char* ip, int port)
 	if(port)
 		addr.sin_port = htons(port);
 	else
-		addr.sin_port = htons(DEFAULT_PORT)
+		addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
 };
