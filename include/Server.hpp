@@ -40,6 +40,8 @@ class Server
 	void get_message();
 	void send_message();
 
+	void init_fds();
+
 public:
 	Server(const char* ip = 0, int port = 0);
 	~Server();
