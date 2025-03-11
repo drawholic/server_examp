@@ -63,3 +63,28 @@ void Client::get_message()
 	const char* msg = "Hello world!";
 	message = msg;
 };
+
+void Client::run()
+{
+	get_message();
+	send_message();
+};
+
+
+void Client::send_message()
+{
+	unsigned total_sent = 0;
+	unsigned bytes_sent = 0;
+
+	bytes_sent = send(fd, message, strlen(message), 0);
+	if(bytes_sent == -1)
+	{
+		perror("Failure sending message");
+		return;
+	}
+	
+	total_sent += bytes_sent;
+	printf("sent: %u bytes\n", bytes_sent);
+	
+	printf("Total sent bytes %u\n", bytes_sent);
+};
