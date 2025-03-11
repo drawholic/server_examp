@@ -120,7 +120,7 @@ void Server::run()
 			continue;
 		};
 
-		if(fds[1].revents & POLLIN)
+		if(fds[0].revents & POLLIN)
 		{
 			client = accept(fd, 0, 0);
 			if(client == -1)
@@ -145,6 +145,8 @@ void Server::add_pollfd(int client)
     fds[fds_num].fd = client;
     fds[fds_num].events = POLLIN;
     fds_num++;
+
+    printf("New client connected\n");
 };
 
 void Server::socket_listen()
