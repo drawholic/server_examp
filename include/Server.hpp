@@ -41,6 +41,8 @@ class Server
 	void send_message();
 
 	void init_fds();
+	void add_pollfd(pollfd*);
+
 
 public:
 	Server(const char* ip = 0, int port = 0);
