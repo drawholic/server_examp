@@ -43,6 +43,8 @@ class Server
 	void init_fds();
 	void add_pollfd(int);
 
+	void loop_fds();
+	void read_fd(int);
 
 public:
 	Server(const char* ip = 0, int port = 0);
