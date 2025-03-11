@@ -23,7 +23,7 @@ Server::Server(const char* ip, int port)
 void Server::init_fds()
 {
 	fds_num = 1;
-	fds = new pollfd[FDS_CAPACITY];
+	fds = new pollfd[FDS_CAPACITY]();
 
 	pollfd serv;
 	serv.fd = fd;
@@ -129,15 +129,14 @@ void Server::run()
 				continue;
 			};
 			add_pollfd(client); 
-
 		};
+		loop_fds();
 	};
 };
 
 void Server::add_pollfd(int client)
 {
 	 if (fds_num >= FDS_CAPACITY) {
-        // close(client);
         printf("Max capacity reached\n");
         return;
     }
@@ -166,3 +165,38 @@ void Server::stop()
 {
 	running = false;
 };
+
+void Server::loop_fds()
+{
+	for(unsigned i = 1; i < fds_num; i++)
+	{
+		if(!running)
+			return;
+		if(fds[i].revents & POLLHUP)
+		{
+			close(fds[i].fd);
+			fds[i] = fds[fds_num - 1];
+			fds_num--;
+			i--;
+		};
+		if(fds[i].revents & POLLIN)
+		{
+			read_fd(fds[i].fd);
+		};
+	};
+};
+
+void Server::read_fd(int client_fd)
+{
+	unsigned total_read = 0;
+	unsigned bytes_read;
+	printf("Receiving: ");
+	while((bytes_read = recv(client_fd, buffer, BUFFER_SIZE, 0)) > 0)
+	{
+		total_read += bytes_read;
+		if(!running)
+			return;
+		printf("%s", buffer);
+	};
+	printf("\nEnd of receive, received %u bytes\n", total_read);
+}
