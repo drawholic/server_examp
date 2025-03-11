@@ -15,6 +15,8 @@ Server::Server(const char* ip, int port)
 	socket_listen();
 
 	buffer = new char[BUFFER_SIZE];
+	fds_num = 0;
+	fds = new pollfd[FDS_CAPACITY];
 };
 
 void Server::set_options()
@@ -28,11 +30,20 @@ void Server::set_options()
 		close(fd);
 		exit(EXIT_FAILURE);
 	};
+
+	status = fcntl(fd, F_SETFL, O_NONBLOCK);
+
+	if(status == -1)
+	{
+		perror("Failure setting nonblock");
+		close(fd);
+		exit(EXIT_FAILURE);
+	};
 };
 
 Server::~Server()
 {
-	delete buffer[];
+	delete[] buffer;
 };
 
 void Server::create_socket()
@@ -53,9 +64,9 @@ void Server::fill_address(const char* ip, int port)
 	else
 		addr.sin_addr.s_addr = INADDR_ANY;
 	if(port)
-		addr_len.sin_port = htons(port);
+		addr.sin_port = htons(port);
 	else
-		addr_len.sin_port = htons(DEFAULT_PORT);
+		addr.sin_port = htons(DEFAULT_PORT);
 
 	addr.sin_family = AF_INET;
 
@@ -73,3 +84,24 @@ void Server::bind_addr()
 	};
 };
 
+void Server::run()
+{
+	running = true;
+	while(running)
+	{
+
+	};
+};
+
+
+void Server::socket_listen()
+{
+	status = listen(fd, 10);
+
+	if(status == -1)
+	{
+		perror("Failure setting listen");
+		close(fd);
+		exit(EXIT_FAILURE);
+	};
+};
