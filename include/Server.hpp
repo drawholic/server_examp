@@ -41,7 +41,7 @@ class Server
 	void send_message();
 
 	void init_fds();
-	void add_pollfd(pollfd*);
+	void add_pollfd(int);
 
 
 public:
@@ -49,6 +49,7 @@ public:
 	~Server();
 
 	void run();
+	void stop();
 
 };
 
