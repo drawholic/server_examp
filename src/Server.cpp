@@ -23,7 +23,7 @@ Server::Server(const char* ip, int port)
 void Server::init_fds()
 {
 	fds_num = 1;
-	fds = new pollfd[FDS_CAPACITY]();
+	fds = new pollfd[FDS_CAPACITY];
 
 	pollfd serv;
 	serv.fd = fd;
@@ -63,6 +63,8 @@ Server::~Server()
 	};
 	delete[] fds;
 	close(fd);
+
+	printf("Closing server\n");
 };
 
 void Server::create_socket()
@@ -126,18 +128,17 @@ void Server::run()
 				perror("Failure accepting");
 				continue;
 			};
-			pollfd client_pollfd;
-			client_pollfd.fd = client;
-			client_pollfd.events = POLLIN;
+			add_pollfd(client); 
 
 		};
 	};
 };
 
-void Server::add_pollfd(pollfd* client)
+void Server::add_pollfd(int client)
 {
 	 if (fds_num >= FDS_CAPACITY) {
-        close(client);
+        // close(client);
+        printf("Max capacity reached\n");
         return;
     }
 
@@ -156,4 +157,10 @@ void Server::socket_listen()
 		close(fd);
 		exit(EXIT_FAILURE);
 	};
+};
+
+
+void Server::stop()
+{
+	running = false;
 };
