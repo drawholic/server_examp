@@ -26,12 +26,15 @@ class Server
 	void socket_listen();
 	void bind_addr();
 	void server_accept();
+
 	void get_message();
 	void send_message();
 
 public:
 	Server(const char* ip = 0, int port = 0);
 	~Server();
+
+	void run();
 
 };
 
