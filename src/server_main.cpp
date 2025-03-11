@@ -9,6 +9,7 @@ void handle_interrupt(int);
 
 int main(int argc, char const *argv[])
 {
+	signal(SIGINT, handle_interrupt);
 	const char* ip = "0.0.0.0";
 	int port = 8000;
 
