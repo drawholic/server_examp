@@ -17,6 +17,7 @@ int main(int argc, char const *argv[])
 
 	s->run();
 	printf("Hello world!\n");
+	delete s;
 	return 0;
 }
 
