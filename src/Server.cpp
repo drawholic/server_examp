@@ -15,9 +15,22 @@ Server::Server(const char* ip, int port)
 	socket_listen();
 
 	buffer = new char[BUFFER_SIZE];
-	fds_num = 0;
+
+	init_fds();
+
+	
+};
+void Server::init_fds()
+{
+	fds_num = 1;
 	fds = new pollfd[FDS_CAPACITY];
 	fds = {0};
+
+	pollfd serv;
+	serv.fd = fd;
+	serv.events = POLLIN;
+
+	fds[0] = serv;
 };
 
 void Server::set_options()
@@ -45,6 +58,15 @@ void Server::set_options()
 Server::~Server()
 {
 	delete[] buffer;
+	for(unsigned i = 0; i < fds_num; i++)
+	{
+		if((fds+i) != 0)
+		{
+			close(fds[i].fd);
+		};
+	};
+	delete[] fds;
+	close(fd);
 };
 
 void Server::create_socket()
@@ -90,6 +112,12 @@ void Server::run()
 	running = true;
 	while(running)
 	{
+		status = poll(fds, fds_num, 1000);
+
+		if(status == -1)
+		{
+			perror("Error on polling");
+		};
 
 	};
 };
