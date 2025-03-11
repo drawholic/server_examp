@@ -7,15 +7,25 @@
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
+#include <poll.h>
+#include <fcntl.h>
 
 const unsigned BUFFER_SIZE = 1024;
 const unsigned DEFAULT_PORT = 8000;
+const unsigned FDS_CAPACITY = 10;
+
 class Server
 {
+
+	pollfd* fds;
+	nfds_t fds_num;
+
 	int status;
+	bool running;
 	int fd, client;
 	
 	sockaddr_in addr;
+
 	socklen_t addr_len;
 
 	char* buffer;
