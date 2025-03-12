@@ -140,9 +140,9 @@ void Server::add_pollfd(int client)
         printf("Max capacity reached\n");
         return;
     }
-
+    fcntl(client, F_SETFL, O_NONBLOCK);
     fds[fds_num].fd = client;
-    fds[fds_num].events = POLLIN;
+    fds[fds_num].events = POLLIN | POLLOUT;
     fds_num++;
 
     printf("New client connected\n");
@@ -174,24 +174,50 @@ void Server::loop_fds()
 			return;
 		if(fds[i].revents & POLLHUP)
 		{
-			close(fds[i].fd);
-			fds[i] = fds[fds_num - 1];
-			fds_num--;
+			close_fd(i);
 			i--;
 		};
 		if(fds[i].revents & POLLIN)
 		{
 			read_fd(fds[i].fd);
+			// close_fd(i);
+		};
+		if(fds[i].revents & POLLOUT)
+		{
+			write_fd(fds[i].fd);
+			// close_fd(i);
 		};
 	};
 };
 
-void Server::read_fd(int client_fd)
+void Server::write_fd(unsigned client_index)
+{
+	unsigned bytes_sent = 0;
+	const char* message = "Hello from server";
+	bytes_sent = send(fds[client_index].fd, message, strlen(message), 0);
+	if(bytes_sent == -1)
+	{
+		perror("Failure sending message");
+		return;
+	};
+
+};
+
+void Server::close_fd(unsigned fd_index)
+{
+	close(fds[fd_index].fd);
+	fds[fd_index] = fds[fd_index - 1];
+	fds_num--;
+
+
+};
+
+void Server::read_fd(unsigned client_index)
 {
 	unsigned total_read = 0;
 	unsigned bytes_read;
 	printf("Receiving: ");
-	while((bytes_read = recv(client_fd, buffer, BUFFER_SIZE, 0)) > 0)
+	while((bytes_read = recv(fds[client_index].fd, buffer, BUFFER_SIZE, 0)) > 0)
 	{
 		total_read += bytes_read;
 		if(!running)
