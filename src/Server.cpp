@@ -25,11 +25,8 @@ void Server::init_fds()
 	fds_num = 1;
 	fds = new pollfd[FDS_CAPACITY]();
 
-	pollfd serv;
-	serv.fd = fd;
-	serv.events = POLLIN;
-
-	fds[0] = serv;
+	fds[0].fd = fd;
+	fds[0].events = POLLIN;
 };
 
 void Server::set_options()
@@ -180,12 +177,12 @@ void Server::loop_fds()
 		if(fds[i].revents & POLLIN)
 		{
 			read_fd(i);
-			close_fd(i);
+			// close_fd(i);
 		};
 		if(fds[i].revents & POLLOUT)
 		{
 			write_fd(i);
-			close_fd(i);
+			// close_fd(i);
 		};
 	};
 };
