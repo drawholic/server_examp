@@ -60,7 +60,7 @@ void Client::connect_to_server()
 
 void Client::get_message()
 {
-	const char* msg = "Hello world!";
+	const char* msg = "Hello world from client!";
 	message = msg;
 };
 
@@ -68,8 +68,22 @@ void Client::run()
 {
 	get_message();
 	send_message();
+	receive_message();
 };
 
+
+void Client::receive_message()
+{
+	unsigned total_read = 0;
+	unsigned bytes_read;
+	printf("Receiving: ");
+	while((bytes_read = recv(fd, buffer, BUFFER_SIZE, 0)) > 0)
+	{
+		total_read += bytes_read; 
+		printf("%s", buffer);
+	};
+	printf("\nEnd of receive, received %u bytes\n", total_read);
+};
 
 void Client::send_message()
 {
