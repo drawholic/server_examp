@@ -180,10 +180,12 @@ void Server::loop_fds()
 		if(fds[i].revents & POLLIN)
 		{
 			read_fd(i);
+			close_fd(i);
 		};
 		if(fds[i].revents & POLLOUT)
 		{
 			write_fd(i);
+			close_fd(i);
 		};
 	};
 };
@@ -204,7 +206,7 @@ void Server::write_fd(unsigned client_index)
 void Server::close_fd(unsigned fd_index)
 {
 	close(fds[fd_index].fd);
-	fds[fd_index] = fds[fd_index - 1];
+	fds[fd_index] = fds[fds_num - 1];
 	fds_num--;
 
 
@@ -220,7 +222,7 @@ void Server::read_fd(unsigned client_index)
 		total_read += bytes_read;
 		if(!running)
 			return;
-		buffer[bytes_read+1] = 0;
+		buffer[bytes_read] = 0;
 		printf("%s", buffer);
 	};
 	printf("\nEnd of receive, received %u bytes\n", total_read);
