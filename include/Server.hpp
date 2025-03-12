@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <cstring>
 
 const unsigned BUFFER_SIZE = 1024;
 const unsigned DEFAULT_PORT = 8000;
@@ -44,7 +45,10 @@ class Server
 	void add_pollfd(int);
 
 	void loop_fds();
-	void read_fd(int);
+	void read_fd(unsigned);
+	void write_fd(unsigned);
+
+	void close_fd(unsigned);
 
 public:
 	Server(const char* ip = 0, int port = 0);
