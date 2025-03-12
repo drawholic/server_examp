@@ -21,3 +21,7 @@ ${BUILD_DIR}/Server.o: ${SRC_DIR}/Server.cpp
 
 ${BUILD_DIR}/Client.o: ${SRC_DIR}/Client.cpp
 	${CXX} ${CXX_FLAGS} -c $^ -o $@
+
+
+run_10_clients: 
+	for i in `seq 1 100`; do ./build/client_main; done;
