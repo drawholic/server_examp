@@ -24,6 +24,8 @@ class Client
 	void create_socket();
 	void fill_address(const char*, int);
 	void connect_to_server();
+
+	void receive_message();
 	void send_message();
 	void get_message();
 public:
